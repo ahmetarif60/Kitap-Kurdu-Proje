@@ -1,14 +1,31 @@
 import React from "react";
 
-const EditModal = ({setShowEditModal}) => {
+const EditModal = ({
+  setShowEditModal = () => {},
+  editItem = {},
+  setEditItem = () => {},
+  handleEditBook=()=>{}
+}) => {
+  console.log(editItem)
   return (
+    
     <div className="modal-wrapperr">
       <div className="modall">
         <h5>Kitap İsmini Düzenle</h5>
-        <input type="text" value={"Kitap Adı"} className="form-control" />
+        <input
+          onChange={(e)=>setEditItem({...editItem,title:e.target.value})}
+          type="text"
+          value={editItem.title}
+          className="form-control"
+        />
         <div className="d-flex justify-content-between mt-3">
-            <button className="btn btn-primary">Kaydet</button>
-            <button onClick={()=>setShowEditModal(false)} className="btn btn-warning">Vazgeç</button>
+          <button onClick={()=>handleEditBook()} className="btn btn-primary">Kaydet</button>
+          <button
+            onClick={() => setShowEditModal(false)}
+            className="btn btn-warning"
+          >
+            Vazgeç
+          </button>
         </div>
       </div>
     </div>

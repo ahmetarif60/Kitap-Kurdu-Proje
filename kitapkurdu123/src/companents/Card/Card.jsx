@@ -1,6 +1,6 @@
 import React from "react";
 
-const Card = ({bookInfo,handleModal,handleEditModal}) => {
+const Card = ({bookInfo,handleModal,handleEditModal,handleRead}) => {
   //console.log(props);
   const {title,date,isRead,id}=bookInfo
   return (
@@ -20,8 +20,8 @@ const Card = ({bookInfo,handleModal,handleEditModal}) => {
       <div className="btn-group">
         <button onClick={()=>handleModal(id,title)} className="btn btn-danger">sil</button>
 
-        <button onClick={()=>handleEditModal} className="btn btn-primary">düzenle</button>
-        <button className="btn btn-success">
+        <button onClick={()=>handleEditModal(bookInfo)} className="btn btn-primary">düzenle</button>
+        <button onClick={()=>handleRead(bookInfo)} className="btn btn-success">
           {isRead === true ? "Okundu" : "Okunmadı"}
         </button>
       </div>

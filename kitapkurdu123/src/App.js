@@ -10,9 +10,10 @@ function App() {
 
   const [books, setBooks] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(true);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [deleteTitle, setDeleteTitle] = useState("");
+  const [editItem, setEditItem] = useState({});
   const handleChange = (e) => {
     //console.log(e.target.value)
     setBookName(e.target.value);
@@ -54,16 +55,43 @@ function App() {
     //!console.log('delete fonksiyonu')
     const filteredBooks = books.filter((book) => book.id !== deleteId);
     setBooks(filteredBooks);
-    setShowDeleteModal(false);
-    toast.error("Kitap Başarıyla Silindi", { autoClose: 2000 });
   };
 
-  const handleEditModal = () => {
-    console.log("düzenleme modal");
-    setShowEditModal(true)
+  const handleEditModal = (editBook) => {
+    //console.log("düzenleme modal");
+    setEditItem(editBook);
+    setShowEditModal(true);
+    //console.log(editBook)
   };
 
+  const handleEditBook = () => {
+    const editIndex = books.findIndex((book) => book.id === editItem.id);
+
+    const cloneBooks = [...books];
+    //console.log("edit fonksiyonu");
+    setBooks(cloneBooks);
+
+    cloneBooks.splice(editIndex, 1, editItem);
+
+    setShowEditModal(false);
+    toast.info("Kitap Başarıyla Güncellendi", { autoClose: 2000 });
+  };
   useEffect(() => {}, []);
+
+  const handleRead = (readBook) => {
+    //console.log('read fonksiyonu')
+    console.log(readBook);
+
+    const updatedBook = { ...readBook, isRead: !readBook.isRead };
+
+    //console.log(updatedBook);
+
+    const index = books.findIndex((book) => book.id === readBook.id);
+
+    const cloneBooks = [...books];
+    cloneBooks[index] = updatedBook;
+    setBooks(cloneBooks);
+  };
 
   return (
     <div>
@@ -85,8 +113,12 @@ function App() {
         ) : (
           books.map((book) => (
             <Card
-             handleEditModal={handleEditModal}
-             handleModal={handleModal} bookInfo={book} key={book.id} />
+              handleEditModal={handleEditModal}
+              handleModal={handleModal}
+              bookInfo={book}
+              key={book.id}
+              handleRead={handleRead}
+            />
           ))
         )}
       </div>
@@ -97,7 +129,14 @@ function App() {
           setShowDeleteModal={setShowDeleteModal}
         />
       )}
-      {showEditModal && <EditModal setShowEditModal={setShowEditModal} />}
+      {showEditModal && (
+        <EditModal
+          handleEditBook={handleEditBook}
+          editItem={editItem}
+          setEditItem={setEditItem}
+          setShowEditModal={setShowEditModal}
+        />
+      )}
     </div>
   );
 }
