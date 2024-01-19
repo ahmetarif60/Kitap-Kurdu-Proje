@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./companents/header/header";
 import { toast } from "react-toastify";
 import { v4 } from "uuid";
 import Card from "./companents/Card/Card";
 import DeleteModal from "./companents/DeleteModal/DeleteModal";
+import EditModal from "./companents/EditModal/EditModal";
 function App() {
   const [bookName, setBookName] = useState("");
 
   const [books, setBooks] = useState([]);
-  const [showDeleteModal,setShowDeleteModal]=useState(false)
-  const [deleteId,setDeleteId]=useState(null)
-  const [deleteTitle,setDeleteTitle]=useState('')
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(true);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleteTitle, setDeleteTitle] = useState("");
   const handleChange = (e) => {
     //console.log(e.target.value)
     setBookName(e.target.value);
@@ -34,35 +36,34 @@ function App() {
     //!console.log("yeni kitap objesi", newBook);
     setBooks([...books, newBook]);
 
+    toast.success("Kitap Başarıyla Eklendi", { autoClose: 2000 });
+
     setBookName("");
 
     //console.log("form fonksiyonu");
   };
   //! console.log("kitaplar dizisi", books);
 
+  const handleModal = (deleteBookId, deleteBookTitle) => {
+    setDeleteId(deleteBookId);
+    setDeleteTitle(deleteBookTitle);
+    setShowDeleteModal(true);
+  };
 
-
-
-
-
-  const handleModal = (deleteBookId,deleteBookTitle) => {
-   setDeleteId(deleteBookId)
-   setDeleteTitle(deleteBookTitle)
-    setShowDeleteModal(true)
-  }
-
-  const handleDelete=()=>{
+  const handleDelete = () => {
     //!console.log('delete fonksiyonu')
-  }
+    const filteredBooks = books.filter((book) => book.id !== deleteId);
+    setBooks(filteredBooks);
+    setShowDeleteModal(false);
+    toast.error("Kitap Başarıyla Silindi", { autoClose: 2000 });
+  };
 
-  const filteredBooks=books.filter((book)=>book.id !==deleteId)
+  const handleEditModal = () => {
+    console.log("düzenleme modal");
+    setShowEditModal(true)
+  };
 
-  console.log(filteredBooks)
-  if(0==0){
-    setBooks(filteredBooks)
-    setShowDeleteModal(false)
-    }
-  
+  useEffect(() => {}, []);
 
   return (
     <div>
@@ -82,13 +83,23 @@ function App() {
         {books.length === 0 ? (
           <h4>Henüz Herhangi Bir Kitap Eklenmedi</h4>
         ) : (
-          books.map((book) => <Card handleModal={handleModal} bookInfo={book} key={book.id} />)
+          books.map((book) => (
+            <Card
+             handleEditModal={handleEditModal}
+             handleModal={handleModal} bookInfo={book} key={book.id} />
+          ))
         )}
       </div>
-      {showDeleteModal&&<DeleteModal bookTitle={deleteTitle} handleDelete={handleDelete} setShowDeleteModal={setShowDeleteModal}/>}
+      {showDeleteModal && (
+        <DeleteModal
+          bookTitle={deleteTitle}
+          handleDelete={handleDelete}
+          setShowDeleteModal={setShowDeleteModal}
+        />
+      )}
+      {showEditModal && <EditModal setShowEditModal={setShowEditModal} />}
     </div>
   );
 }
 
 export default App;
-

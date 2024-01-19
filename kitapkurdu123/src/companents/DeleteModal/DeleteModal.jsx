@@ -2,8 +2,8 @@ import React from "react";
 
 const DeleteModal = ({ setShowDeleteModal, handleDelete, bookTitle }) => {
   return (
-    <div className="delete-modal">
-      <div className="modal-inner">
+    <div className="modal-wrapperr">
+      <div className="modall">
         <h5> {bookTitle} Kitabını Silmek İstiyor Musunuz?</h5>
         <button
           onClick={() => setShowDeleteModal(false)}
